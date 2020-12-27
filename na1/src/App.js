@@ -12,7 +12,7 @@ const colInput = "w-1/3 text-center";
 const link = "text-xs text-blue-700";
 const round = (n, d = 0) => Math.round(n * 10 ** d) / 10 ** d;
 
-export default function() {
+export default function () {
   const [weight, setWeight] = React.useState(0.0);
   const [maleGender, setGender] = React.useState(false);
   const [initialNa, setInitialNa] = React.useState(0.0);
@@ -26,12 +26,14 @@ export default function() {
   const tbw = genderFactor * weight;
 
   const riseNa = ((dialysateNa - initialNa) * qb * time) / tbw;
+  const maximumRise = dialysateNa - initialNa;
 
+  const changeNa = maximumRise > 0 ? Math.min(riseNa, maximumRise) : Math.max(riseNa, maximumRise);
   return (
     <div className={card}>
       <p className={title}>Hyponatremia in Hemodialysis Patients</p>
       <p className={subtitle}>
-        Rise in serum sodium at the end of hemodialysis session
+        Change in serum sodium at the end of hemodialysis session
       </p>
       <Input label="Initial Na (mEq/L)" onChange={setInitialNa} />
       <Input label="Dialysate Na (mEq/L)" onChange={setDialysateNa} />
@@ -47,7 +49,7 @@ export default function() {
       </div>
       <div className={title}>
         <Show label="Total Body Water (kg)" value={round(tbw)} />
-        <Show label="Rise in Serum Na (mEq/L)" value={round(riseNa)} />
+        <Show label="Change in Serum Na (mEq/L)" value={round(changeNa)} />
       </div>
       <ul className="list-none text-sm italic">
         <li>
